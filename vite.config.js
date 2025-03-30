@@ -20,6 +20,15 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        outDir: 'public/build',  // Это указывает Vite, куда сохранять собранные файлы
+        manifest: true,  // Включаем создание manifest.json
+    },
+    server: {
+        proxy: {
+            '/app': 'http://localhost', // Это для проксирования запросов в режим разработки
+        },
+    },
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm-bundler.js',

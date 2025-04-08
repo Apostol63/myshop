@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Employee;
+use App\Models\Service;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Enums\EmployeeStatus;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +16,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->generateEmployees();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        Service::factory()->count(10)->create();
+
+        $this->attachServicesToEmployees();
+    }
+
+    private function generateEmployees()
+    {
+        $statuses = EmployeeStatus::cases();
+
+        foreach ($statuses as $status) {
+            Employee::factory()
+                ->count(2)
+                ->create([
+                'status' => $status->value,
+            ]);
+        }
+    }
+
+    private function attachServicesToEmployees()
+    {
+        $employees = Employee::all();
+        $services = Service::all();
+
+        foreach ($employees as $employee) {
+            $randomServices = $services->random(rand(1, 3));
+
+            $employee->service()->attach($randomServices);
+        }
     }
 }

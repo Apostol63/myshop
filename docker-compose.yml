@@ -49,5 +49,11 @@ services:
         depends_on:
             - app
 
+    redis:
+        image: redis:alpine
+        container_name: laravel_redis
+        restart: always
+        ports:
+            - "6379:6379"
 volumes:
     db_data:

@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Установка необходимых пакетов и расширений
+# Установка системных пакетов и зависимостей
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -9,8 +9,16 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    libonig-dev \
+    libzip-dev \
+    autoconf \
+    gcc \
+    g++ \
+    make \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql
+    && docker-php-ext-install gd pdo pdo_mysql \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 # Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
